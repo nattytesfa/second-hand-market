@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\OtpResendThrottledException;
+use App\Exceptions\SmsDeliveryException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Services\PhoneVerificationService;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class RegisteredUserController extends Controller
 {
@@ -17,13 +19,9 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    public function store(Request $request, PhoneVerificationService $verification)
+    public function store(RegisterRequest $request, PhoneVerificationService $verification)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20', 'unique:users,phone'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => $validated['name'],
@@ -33,11 +31,25 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $verification->send($user->phone);
+        $status = 'We sent a verification code to your phone.';
+
+        try {
+            $verification->send($user->phone);
+        } catch (OtpResendThrottledException) {
+            $status = 'Your account is ready. A verification code was already sent; please check your messages.';
+        } catch (SmsDeliveryException $exception) {
+            Auth::logout();
+            $user->delete();
+
+            report($exception);
+
+            throw ValidationException::withMessages([
+                'phone' => 'We could not send the verification code. Please check the SMS configuration and try again.',
+            ]);
+        }
 
         Auth::login($user);
 
-        return redirect()->route('otp.create')
-            ->with('status', 'We sent a verification code to your phone.');
+        return redirect()->route('otp.create')->with('status', $status);
     }
 }

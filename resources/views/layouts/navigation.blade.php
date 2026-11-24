@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">
+                        {{ __('Profile') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -37,6 +40,10 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
                         @unless (Auth::user()->phone_verified_at)
                             <x-dropdown-link :href="route('otp.create')">
                                 {{ __('Verify Phone') }}
@@ -77,6 +84,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">
+                {{ __('Profile') }}
             </x-responsive-nav-link>
         </div>
 

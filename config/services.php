@@ -35,4 +35,20 @@ return [
         ],
     ],
 
+    'sms' => [
+        // "log" is used for local development and automated tests.
+        'provider' => env('SMS_PROVIDER', 'log'),
+
+        // AfroMessage / AfroSMS (official API documented at afromessage.com/developers).
+        'afrosms' => [
+            // AFROSMS_API_KEY is accepted as a backwards-compatible alias for the token.
+            'token' => env('AFROSMS_TOKEN', env('AFROSMS_API_KEY')),
+            'identifier_id' => env('AFROSMS_IDENTIFIER_ID'),
+            'sender' => env('AFROSMS_SENDER_NAME', env('AFROSMS_SENDER_ID')),
+            'api_base' => env('AFROSMS_API_BASE', 'https://api.afromessage.com/api'),
+            'endpoint' => env('AFROSMS_ENDPOINT', 'https://api.afromessage.com/api/send'),
+            'callback' => env('AFROSMS_CALLBACK_URL'),
+        ],
+    ],
+
 ];

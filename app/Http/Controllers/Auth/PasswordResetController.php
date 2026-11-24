@@ -2,37 +2,50 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\OtpResendThrottledException;
+use App\Exceptions\SmsDeliveryException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RequestPasswordResetRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
 use App\Services\PhoneVerificationService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 class PasswordResetController extends Controller
 {
     private const SESSION_KEY = 'password_reset_phone';
 
+    private const GENERIC_STATUS = 'If the number is registered, we sent a verification code to it.';
+
     public function create()
     {
         return view('auth.forgot-password');
     }
 
-    public function store(Request $request, PhoneVerificationService $service)
+    public function store(RequestPasswordResetRequest $request, PhoneVerificationService $service)
     {
-        $validated = $request->validate([
-            'phone' => ['required', 'string', 'exists:users,phone'],
-        ]);
+        $phone = $request->validated('phone');
 
-        $service->sendPasswordResetCode($validated['phone']);
+        $request->session()->put(self::SESSION_KEY, $phone);
 
-        $request->session()->put(self::SESSION_KEY, $validated['phone']);
+        if (User::where('phone', $phone)->exists()) {
+            try {
+                $service->sendPasswordResetCode($phone);
+            } catch (OtpResendThrottledException) {
+                // Same response as a successful request: do not reveal that an
+                // OTP already exists for this number.
+            } catch (SmsDeliveryException $exception) {
+                // Keep the enumeration-safe response, but surface the failure
+                // in logs so configuration issues can be diagnosed.
+                report($exception);
+            }
+        }
 
-        return redirect()->route('password.reset.create')
-            ->with('status', 'We sent a verification code to your phone.');
+        return redirect()->route('password.reset.create')->with('status', self::GENERIC_STATUS);
     }
 
-    public function showResetForm(PhoneVerificationService $service)
+    public function showResetForm()
     {
         $phone = session(self::SESSION_KEY);
 
@@ -42,11 +55,10 @@ class PasswordResetController extends Controller
 
         return view('auth.reset-password', [
             'phone' => $phone,
-            'debugCode' => $service->debugPasswordResetCode($phone),
         ]);
     }
 
-    public function reset(Request $request, PhoneVerificationService $service)
+    public function reset(Request $request, ResetPasswordRequest $resetRequest, PhoneVerificationService $service)
     {
         $phone = $request->session()->get(self::SESSION_KEY);
 
@@ -54,23 +66,21 @@ class PasswordResetController extends Controller
             return redirect()->route('password.request');
         }
 
-        $validated = $request->validate([
-            'code' => ['required', 'string', 'size:'.config('otp.length')],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        $validated = $resetRequest->validated();
 
-        if (! $service->verifyPasswordResetCode($phone, $validated['code'])) {
+        $user = User::where('phone', $phone)->first();
+
+        if (! $user || ! $service->verifyPasswordResetCode($phone, $validated['code'])) {
             throw ValidationException::withMessages([
                 'code' => __('The verification code is invalid or has expired.'),
             ]);
         }
 
-        User::wherePhone($phone)->firstOrFail()->update([
-            'password' => $validated['password'],
-        ]);
+        $user->update(['password' => $validated['password']]);
 
         $service->forgetPasswordResetCode($phone);
         $request->session()->forget(self::SESSION_KEY);
+        $request->session()->regenerateToken();
 
         return redirect()->route('login')
             ->with('status', 'Password reset successfully. Please log in.');
@@ -84,8 +94,16 @@ class PasswordResetController extends Controller
             return redirect()->route('password.request');
         }
 
-        $service->sendPasswordResetCode($phone);
+        if (User::where('phone', $phone)->exists()) {
+            try {
+                $service->sendPasswordResetCode($phone);
+            } catch (OtpResendThrottledException) {
+                // Keep the response identical for throttled and fresh requests.
+            } catch (SmsDeliveryException $exception) {
+                report($exception);
+            }
+        }
 
-        return back()->with('status', 'A new verification code has been sent.');
+        return back()->with('status', self::GENERIC_STATUS);
     }
 }

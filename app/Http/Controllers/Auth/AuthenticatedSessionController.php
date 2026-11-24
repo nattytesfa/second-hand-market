@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\OtpResendThrottledException;
+use App\Exceptions\SmsDeliveryException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\PhoneVerificationService;
@@ -21,11 +23,22 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if (! Auth::user()->phone_verified_at) {
-            $verification->send(Auth::user()->phone);
+        $user = Auth::user();
 
-            return redirect()->route('otp.create')
-                ->with('status', 'Your phone is not verified. We sent a new code.');
+        if (! $user->isPhoneVerified()) {
+            $status = 'Your phone is not verified. We sent a new code.';
+
+            try {
+                $verification->send($user->phone);
+            } catch (OtpResendThrottledException) {
+                $status = 'A verification code was already sent. Please check your messages.';
+            } catch (SmsDeliveryException $exception) {
+                report($exception);
+
+                $status = 'We could not send the verification code. Check the SMS configuration and try again.';
+            }
+
+            return redirect()->route('otp.create')->with('status', $status);
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

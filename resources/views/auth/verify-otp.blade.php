@@ -6,12 +6,6 @@
         <span class="font-medium text-gray-900">{{ $phone }}</span>
     </div>
 
-    @if (app()->environment('local') && $debugCode)
-        <div class="mb-4 rounded-md bg-yellow-50 p-3 text-sm text-yellow-800">
-            {{ __('Local development code:') }} <span class="font-mono font-semibold">{{ $debugCode }}</span>
-        </div>
-    @endif
-
     <form method="POST" action="{{ route('otp.store') }}">
         @csrf
 

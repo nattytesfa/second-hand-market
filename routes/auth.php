@@ -21,6 +21,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.request');
 
     Route::post('forgot-password', [PasswordResetController::class, 'store'])
+        ->middleware('throttle:3,1')
         ->name('password.email');
 
     Route::get('reset-password', [PasswordResetController::class, 'showResetForm'])
@@ -35,16 +36,18 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verify-phone', [PhoneVerificationController::class, 'create'])
-        ->name('otp.create');
-
-    Route::post('verify-phone', [PhoneVerificationController::class, 'store'])
-        ->name('otp.store');
-
-    Route::post('verify-phone/resend', [PhoneVerificationController::class, 'resend'])
-        ->middleware('throttle:3,1')
-        ->name('otp.resend');
-
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::middleware('account.active')->group(function () {
+        Route::get('verify-phone', [PhoneVerificationController::class, 'create'])
+            ->name('otp.create');
+
+        Route::post('verify-phone', [PhoneVerificationController::class, 'store'])
+            ->name('otp.store');
+
+        Route::post('verify-phone/resend', [PhoneVerificationController::class, 'resend'])
+            ->middleware('throttle:3,1')
+            ->name('otp.resend');
+    });
 });

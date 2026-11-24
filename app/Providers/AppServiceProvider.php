@@ -2,21 +2,17 @@
 
 namespace App\Providers;
 
+use App\Services\AfroMessageOtpProvider;
+use App\Services\Contracts\OtpProvider;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+        $this->app->bind(OtpProvider::class, AfroMessageOtpProvider::class);
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         //
