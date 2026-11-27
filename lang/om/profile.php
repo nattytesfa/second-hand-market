@@ -20,4 +20,6 @@ return [
     'status_updated' => 'Maalummaan haara’ameera.',
     'show_password' => 'Jecha darbii agarsiisi',
     'hide_password' => 'Jecha darbii dhise',
+    'settings' => 'Qindaa’ina',
+    'language_help' => 'Afaan appii keessatti fayyadamtu filadhu.',
 ];

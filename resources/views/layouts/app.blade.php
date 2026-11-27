@@ -7,29 +7,20 @@
 
         <title>{{ config('app.name', 'Adama Second-Hand Market') }}</title>
 
-        <!-- Fonts: Figtree for Latin text, Noto Sans Ethiopic for Amharic/Ethiopic glyphs -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased {{ app()->getLocale() === 'am' ? 'font-ethiopic' : '' }}">
-        <div class="min-h-screen bg-gray-100">
+    <body class="font-sans antialiased text-ink surface-mist {{ app()->getLocale() === 'am' ? 'font-ethiopic' : '' }}">
+        <div class="min-h-screen">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <header class="relative z-0 border-b border-forest/10 bg-white/70 backdrop-blur-md">
+                    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
-            <!-- Page Content -->
             <main>
                 {{ $slot }}
             </main>

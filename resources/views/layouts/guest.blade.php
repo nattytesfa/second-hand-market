@@ -7,27 +7,24 @@
 
         <title>{{ config('app.name', 'Adama Second-Hand Market') }}</title>
 
-        <!-- Fonts: Figtree for Latin text, Noto Sans Ethiopic for Amharic/Ethiopic glyphs -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased {{ app()->getLocale() === 'am' ? 'font-ethiopic' : '' }}">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div class="w-full max-w-7xl px-4 flex items-center justify-between">
-                <a href="{{ route('home') }}" class="text-lg font-semibold text-gray-700">
-                    {{ config('app.name', 'Adama Second-Hand Market') }}
-                </a>
+    <body class="font-sans text-ink antialiased surface-auth {{ app()->getLocale() === 'am' ? 'font-ethiopic' : '' }}">
+        <div class="relative min-h-screen overflow-hidden">
+            <div class="pointer-events-none absolute inset-0 pattern-weave opacity-40"></div>
 
-                <x-locale-switcher />
-            </div>
+            <div class="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between gap-4">
+                    <a href="{{ route('home') }}" class="transition opacity-95 hover:opacity-100">
+                        <x-application-logo />
+                    </a>
+                </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+                <div class="flex flex-1 flex-col items-center justify-center py-10 sm:py-14">
+                    <div class="w-full max-w-md animate-fade-up rounded-panel border border-forest/10 bg-white/90 p-6 shadow-panel backdrop-blur-sm sm:p-8">
+                        {{ $slot }}
+                    </div>
+                </div>
             </div>
         </div>
     </body>

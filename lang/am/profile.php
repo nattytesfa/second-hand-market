@@ -20,4 +20,6 @@ return [
     'status_updated' => 'መገለጫው ተስተካክሏል።',
     'show_password' => 'የይለፍ ቃል አሳይ',
     'hide_password' => 'የይለፍ ቃል ደብቅ',
+    'settings' => 'ቅንብሮች',
+    'language_help' => 'በመተግበሪያው ውስጥ የሚጠቀሙትን ቋንቋ ይምረጡ።',
 ];

@@ -20,4 +20,6 @@ return [
     'status_updated' => 'Profile updated.',
     'show_password' => 'Show password',
     'hide_password' => 'Hide password',
+    'settings' => 'Settings',
+    'language_help' => 'Choose the language used across the app.',
 ];

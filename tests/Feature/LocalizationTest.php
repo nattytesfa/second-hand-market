@@ -15,7 +15,8 @@ class LocalizationTest extends TestCase
         $this->get('/')->assertOk();
 
         $this->assertSame('en', app()->getLocale());
-        $this->get('/login')->assertOk()->assertSee('Log in')->assertSee('English');
+        $this->get('/')->assertOk()->assertSee('English');
+        $this->get('/login')->assertOk()->assertSee('Log in')->assertDontSee('English');
     }
 
     public function test_amharic_can_be_selected_and_rendered(): void
@@ -40,7 +41,8 @@ class LocalizationTest extends TestCase
         $this->assertSame('om', app()->getLocale());
 
         $this->get('/forgot-password')->assertOk()->assertSee('Koodii ergi');
-        $this->get('/login')->assertSee('Afaan Oromoo');
+        $this->get('/')->assertSee('Afaan Oromoo');
+        $this->get('/login')->assertDontSee('Afaan Oromoo');
     }
 
     public function test_selected_language_persists_across_requests(): void
@@ -86,15 +88,31 @@ class LocalizationTest extends TestCase
         app()->setLocale('en');
     }
 
-    public function test_switcher_is_available_to_guests_and_authenticated_users(): void
+    public function test_switcher_is_on_home_for_guests_and_profile_settings_for_users(): void
     {
-        $this->get('/')->assertSee('አማርኛ')->assertSee('Afaan Oromoo');
+        $this->get('/')
+            ->assertSee('አማርኛ')
+            ->assertSee('Afaan Oromoo');
+
+        $this->get('/login')
+            ->assertOk()
+            ->assertDontSee('አማርኛ');
 
         $user = User::factory()->create();
+
+        $this->actingAs($user)->get('/')
+            ->assertOk()
+            ->assertDontSee('አማርኛ');
+
+        $this->actingAs($user)->get('/dashboard')
+            ->assertOk()
+            ->assertDontSee('አማርኛ');
+
         $this->actingAs($user)->get('/profile')
             ->assertOk()
             ->assertSee('አማርኛ')
-            ->assertSee('Afaan Oromoo');
+            ->assertSee('Afaan Oromoo')
+            ->assertSee('Settings');
     }
 
     public function test_switching_language_returns_to_the_current_page(): void

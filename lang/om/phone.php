@@ -2,8 +2,10 @@
 
 return [
     'code_label' => 'Koodii Mirkaansaa',
-    'instructions' => 'Koodii 6-lakkoofsa bilbila keetii ergame galii.',
-    'verify' => 'Mirkaansi',
+    'verify_title' => 'Bilbila kee mirkaansi',
+    'instructions' => 'Koodii 6-lakkoofsa SMS dhaan erginne galii.',
+    'didnt_get_code' => 'Koodii hin arganne?',
+    'verify' => 'Bilbila mirkaansi',
     'resend_code' => 'Koodii ammas ergi',
     'invalid_or_expired' => 'Koodii mirkaansaa sirrii miti ykn yeroon isaa darbee jira.',
     'resend_wait' => 'Koodii biroo gaafachuun dura maaloo :seconds sekondii eegu.',

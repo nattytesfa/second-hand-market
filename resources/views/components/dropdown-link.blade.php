@@ -1,1 +1,12 @@
-<a {{ $attributes->merge(['class' => 'block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out']) }}>{{ $slot }}</a>
+@props(['variant' => 'default'])
+
+@php
+$classes = match ($variant) {
+    'danger' => 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm font-medium text-red-700 transition hover:bg-red-50 focus:bg-red-50 focus:outline-none',
+    default => 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm font-medium text-ink transition hover:bg-mist focus:bg-mist focus:outline-none',
+};
+@endphp
+
+<a {{ $attributes->merge(['class' => $classes]) }}>
+    {{ $slot }}
+</a>

@@ -1,12 +1,12 @@
 @props(['disabled' => false])
 
 <div x-data="{ show: false }" class="relative">
-    <input @disabled($disabled) {{ $attributes->merge(['type' => 'password', 'class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pr-14']) }} :type="show ? 'text' : 'password'">
+    <input @disabled($disabled) {{ $attributes->merge(['type' => 'password', 'class' => 'rounded-xl border-forest/20 bg-white pr-14 text-ink shadow-sm placeholder:text-stone-light focus:border-forest-soft focus:ring-forest-soft/40']) }} :type="show ? 'text' : 'password'">
 
     <button type="button"
             @click="show = ! show"
             :aria-label="show ? '{{ __('profile.hide_password') }}' : '{{ __('profile.show_password') }}'"
-            class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:text-gray-700 focus:outline-none rounded-md">
+            class="absolute inset-y-0 right-0 flex items-center rounded-xl px-3 text-stone transition hover:text-ink focus:outline-none focus-visible:text-ink">
         <svg x-show="! show" x-cloak xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />

@@ -1,16 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('navigation.dashboard') }}
-        </h2>
+        <div>
+            <p class="text-sm font-medium uppercase tracking-wider text-forest-soft">{{ __('navigation.dashboard') }}</p>
+            <h2 class="mt-1 font-display text-2xl font-bold leading-tight text-ink">
+                {{ __('messages.dashboard_welcome') }}, {{ Auth::user()->name }}
+            </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __('messages.logged_in') }}
-                </div>
+    <div class="py-10 sm:py-12">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="animate-fade-up overflow-hidden rounded-panel border border-forest/10 bg-white/90 p-6 shadow-soft sm:p-8">
+                <p class="text-base text-ink">{{ __('messages.logged_in') }}</p>
+                <p class="mt-2 text-sm leading-relaxed text-stone">{{ __('messages.dashboard_hint') }}</p>
             </div>
         </div>
     </div>
