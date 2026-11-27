@@ -1,6 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ethiopic glyphs fall back to Noto Sans Ethiopic wherever they appear, even
+   on English/Afaan Oromo pages containing Amharic user-generated names. */
+.font-ethiopic {
+    font-family: 'Noto Sans Ethiopic', 'Figtree', ui-sans-serif, system-ui, sans-serif;
+}
 
 [x-cloak] {
     display: none !important;

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\EthiopianPhone;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Support\EthiopianPhone;
 use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
@@ -20,11 +20,29 @@ class User extends Authenticatable
 
     public const STATUS_BANNED = 'banned';
 
+    public const ROLE_USER = 'user';
+
+    public const ROLE_ADMIN = 'admin';
+
+    public const ROLE_SUPERADMIN = 'superadmin';
+
+    /**
+     * Roles an administrator may manage. The superadmin role is deliberately
+     * excluded: it can only be assigned by SuperadminSeeder.
+     *
+     * @var list<string>
+     */
+    public const MANAGEABLE_ROLES = [
+        self::ROLE_USER,
+        self::ROLE_ADMIN,
+    ];
+
     /**
      * @var array<string, mixed>
      */
     protected $attributes = [
         'status' => self::STATUS_ACTIVE,
+        'role' => self::ROLE_USER,
     ];
 
     /**
@@ -77,6 +95,29 @@ class User extends Authenticatable
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === self::ROLE_SUPERADMIN;
+    }
+
+    /**
+     * Superadmins inherit administrative access but never the other way around.
+     */
+    public function hasAdminAccess(): bool
+    {
+        return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_SUPERADMIN], true);
     }
 
     public function isPhoneVerified(): bool

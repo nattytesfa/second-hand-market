@@ -33,7 +33,7 @@ class PhoneVerificationController extends Controller
 
         if (! $verification->verify($user->phone, $request->string('code')->toString())) {
             throw ValidationException::withMessages([
-                'code' => __('The verification code is invalid or has expired.'),
+                'code' => __('phone.invalid_or_expired'),
             ]);
         }
 
@@ -42,7 +42,7 @@ class PhoneVerificationController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->intended(route('dashboard', absolute: false))
-            ->with('status', 'Phone number verified.');
+            ->with('status', __('common.success.phone_verified'));
     }
 
     public function resend(PhoneVerificationService $verification)
@@ -57,12 +57,12 @@ class PhoneVerificationController extends Controller
             $verification->send($user->phone);
         } catch (OtpResendThrottledException $exception) {
             throw ValidationException::withMessages([
-                'code' => __('Please wait :seconds seconds before requesting another code.', [
+                'code' => __('phone.resend_wait', [
                     'seconds' => $exception->availableIn,
                 ]),
             ]);
         }
 
-        return back()->with('status', 'A new verification code has been sent.');
+        return back()->with('status', __('phone.status_resent'));
     }
 }

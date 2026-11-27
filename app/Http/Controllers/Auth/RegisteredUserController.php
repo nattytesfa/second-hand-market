@@ -31,12 +31,12 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $status = 'We sent a verification code to your phone.';
+        $status = __('registration.status_code_sent');
 
         try {
             $verification->send($user->phone);
         } catch (OtpResendThrottledException) {
-            $status = 'Your account is ready. A verification code was already sent; please check your messages.';
+            $status = __('registration.status_code_already_sent');
         } catch (SmsDeliveryException $exception) {
             Auth::logout();
             $user->delete();
@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
             report($exception);
 
             throw ValidationException::withMessages([
-                'phone' => 'We could not send the verification code. Please check the SMS configuration and try again.',
+                'phone' => __('registration.error_sms_failed'),
             ]);
         }
 

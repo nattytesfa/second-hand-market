@@ -14,7 +14,7 @@ class EthiopianPhoneRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! EthiopianPhone::isValid($value)) {
-            $fail('The :attribute must be a valid Ethiopian mobile number (09XXXXXXXX, 07XXXXXXXX or +251...).');
+            $fail(__('validation.phone_format', ['attribute' => $attribute]));
         }
     }
 }

@@ -82,6 +82,12 @@ return [
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
+    /*
+    | Supported UI locales. English is the default; "am" is Amharic and
+    | "om" is Afaan Oromoo. Session values outside this list are rejected.
+    */
+    'supported_locales' => ['en', 'am', 'om'],
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*

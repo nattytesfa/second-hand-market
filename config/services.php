@@ -51,4 +51,19 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Initial Superadmin Credentials
+    |--------------------------------------------------------------------------
+    |
+    | Used once by SuperadminSeeder. Supply these values through environment
+    | variables; never commit a production password to the repository.
+    |
+    */
+    'superadmin' => [
+        'name' => env('SUPERADMIN_NAME'),
+        'phone' => env('SUPERADMIN_PHONE'),
+        'password' => env('SUPERADMIN_PASSWORD'),
+    ],
+
 ];

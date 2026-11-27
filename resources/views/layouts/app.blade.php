@@ -7,14 +7,16 @@
 
         <title>{{ config('app.name', 'Adama Second-Hand Market') }}</title>
 
-        <!-- Fonts -->
+        <!-- Fonts: Figtree for Latin text, Noto Sans Ethiopic for Amharic/Ethiopic glyphs -->
         <link rel="preconnect" href="https://fonts.bunny.net">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased {{ app()->getLocale() === 'am' ? 'font-ethiopic' : '' }}">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 

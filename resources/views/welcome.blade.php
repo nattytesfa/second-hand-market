@@ -3,32 +3,36 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="{{ config('app.name') }} – a place for buying and selling second-hand goods in Adama, Ethiopia.">
+        <meta name="description" content="{{ __('messages.tagline') }}">
 
         <title>{{ config('app.name', 'Adama Second-Hand Market') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-50 text-gray-900">
+    <body class="font-sans antialiased bg-gray-50 text-gray-900 {{ app()->getLocale() === 'am' ? 'font-ethiopic' : '' }}">
         <div class="min-h-screen flex flex-col">
             <header class="w-full border-b border-gray-200 bg-white">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                     <span class="text-lg font-semibold text-gray-800">
                         {{ config('app.name', 'Adama Second-Hand Market') }}
                     </span>
 
-                    @if (Route::has('login'))
-                        <nav class="flex items-center gap-4 text-sm">
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-900">Dashboard</a>
-                            @else
-                                <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900">Log in</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700">Register</a>
-                                @endif
-                            @endauth
-                        </nav>
-                    @endif
+                    <div class="flex items-center gap-3">
+                        <x-locale-switcher />
+
+                        @if (Route::has('login'))
+                            <nav class="flex items-center gap-4 text-sm">
+                                @auth
+                                    <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-gray-900">{{ __('navigation.dashboard') }}</a>
+                                @else
+                                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900">{{ __('login.submit') }}</a>
+                                    @if (Route::has('register'))
+                                        <a href="{{ route('register') }}" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700">{{ __('registration.submit') }}</a>
+                                    @endif
+                                @endauth
+                            </nav>
+                        @endif
+                    </div>
                 </div>
             </header>
 
@@ -38,10 +42,10 @@
                         {{ config('app.name', 'Adama Second-Hand Market') }}
                     </h1>
                     <p class="mt-4 text-base sm:text-lg text-gray-600">
-                        A local marketplace for buying and selling second-hand goods in Adama, Ethiopia.
+                        {{ __('messages.tagline') }}
                     </p>
                     <p class="mt-2 text-sm text-gray-500">
-                        The application is being set up. Marketplace features will be added in upcoming phases.
+                        {{ __('messages.setup_notice') }}
                     </p>
                 </div>
             </main>

@@ -34,10 +34,10 @@ class UpdateProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.prohibited' => 'The phone number cannot be changed from the profile.',
-            'status.prohibited' => 'The account status cannot be changed from the profile.',
-            'role.prohibited' => 'The role cannot be changed from the profile.',
-            'phone_verified_at.prohibited' => 'Phone verification cannot be changed from the profile.',
+            'phone.prohibited' => __('validation.custom.phone.prohibited'),
+            'status.prohibited' => __('validation.custom.status.prohibited'),
+            'role.prohibited' => __('validation.custom.role.prohibited'),
+            'phone_verified_at.prohibited' => __('validation.custom.phone_verified_at.prohibited'),
         ];
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Profile\UpdateProfileRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -28,6 +27,6 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return back()->with('status', 'Profile updated.');
+        return back()->with('status', __('common.success.profile_updated'));
     }
 }

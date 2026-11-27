@@ -26,16 +26,16 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
 
         if (! $user->isPhoneVerified()) {
-            $status = 'Your phone is not verified. We sent a new code.';
+            $status = __('login.status_unverified');
 
             try {
                 $verification->send($user->phone);
             } catch (OtpResendThrottledException) {
-                $status = 'A verification code was already sent. Please check your messages.';
+                $status = __('login.status_code_already_sent');
             } catch (SmsDeliveryException $exception) {
                 report($exception);
 
-                $status = 'We could not send the verification code. Check the SMS configuration and try again.';
+                $status = __('login.error_sms_failed');
             }
 
             return redirect()->route('otp.create')->with('status', $status);

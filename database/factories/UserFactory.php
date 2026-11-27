@@ -54,4 +54,18 @@ class UserFactory extends Factory
             'status' => User::STATUS_BANNED,
         ]);
     }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_ADMIN,
+        ]);
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
+    }
 }

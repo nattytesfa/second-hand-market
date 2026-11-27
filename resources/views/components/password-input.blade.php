@@ -5,7 +5,7 @@
 
     <button type="button"
             @click="show = ! show"
-            :aria-label="show ? 'Hide password' : 'Show password'"
+            :aria-label="show ? '{{ __('profile.hide_password') }}' : '{{ __('profile.show_password') }}'"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:text-gray-700 focus:outline-none rounded-md">
         <svg x-show="! show" x-cloak xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />

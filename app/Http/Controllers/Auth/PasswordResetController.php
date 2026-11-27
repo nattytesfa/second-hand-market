@@ -16,8 +16,6 @@ class PasswordResetController extends Controller
 {
     private const SESSION_KEY = 'password_reset_phone';
 
-    private const GENERIC_STATUS = 'If the number is registered, we sent a verification code to it.';
-
     public function create()
     {
         return view('auth.forgot-password');
@@ -42,7 +40,7 @@ class PasswordResetController extends Controller
             }
         }
 
-        return redirect()->route('password.reset.create')->with('status', self::GENERIC_STATUS);
+        return redirect()->route('password.reset.create')->with('status', __('passwords.generic_status'));
     }
 
     public function showResetForm()
@@ -72,7 +70,7 @@ class PasswordResetController extends Controller
 
         if (! $user || ! $service->verifyPasswordResetCode($phone, $validated['code'])) {
             throw ValidationException::withMessages([
-                'code' => __('The verification code is invalid or has expired.'),
+                'code' => __('phone.invalid_or_expired'),
             ]);
         }
 
@@ -83,7 +81,7 @@ class PasswordResetController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login')
-            ->with('status', 'Password reset successfully. Please log in.');
+            ->with('status', __('passwords.status_success'));
     }
 
     public function resend(Request $request, PhoneVerificationService $service)
@@ -104,6 +102,6 @@ class PasswordResetController extends Controller
             }
         }
 
-        return back()->with('status', self::GENERIC_STATUS);
+        return back()->with('status', __('passwords.generic_status'));
     }
 }

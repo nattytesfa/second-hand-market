@@ -24,7 +24,7 @@ class EnsureAccountIsActive
             }
 
             return redirect()->route('login')
-                ->with('status', 'This account is not active. Please contact support.');
+                ->with('status', __('auth.inactive_account'));
         }
 
         return $next($request);
